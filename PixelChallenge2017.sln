@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelChallenge2017", "PixelChallenge2017.csproj", "{5A143015-5181-0483-92C0-E72765A45A4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelChallenge2017.Editor", "PixelChallenge2017.Editor.csproj", "{274D56D2-CA09-9453-DA96-AE31D2C96B25}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A143015-5181-0483-92C0-E72765A45A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A143015-5181-0483-92C0-E72765A45A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A143015-5181-0483-92C0-E72765A45A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A143015-5181-0483-92C0-E72765A45A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274D56D2-CA09-9453-DA96-AE31D2C96B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274D56D2-CA09-9453-DA96-AE31D2C96B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274D56D2-CA09-9453-DA96-AE31D2C96B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274D56D2-CA09-9453-DA96-AE31D2C96B25}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
