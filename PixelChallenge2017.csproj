@@ -265,6 +265,8 @@
     <Compile Include="Assets\Scripts\Gameplay\AI\WanderingAI2D.cs" />
     <Compile Include="Assets\Scripts\Gameplay\CameraShake.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Entity.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Player\GhostPlayer.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Player\PacmanPlayer.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Global\EnumTypes.cs" />
     <Compile Include="Assets\Scripts\GlobalInjector.cs" />

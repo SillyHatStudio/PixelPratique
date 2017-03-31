@@ -260,7 +260,10 @@
     <Compile Include="Assets\Scripts\GUI\Menu.cs" />
     <Compile Include="Assets\Scripts\GUI\SplashScreen.cs" />
     <Compile Include="Assets\Scripts\GameManagement\GameManager.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\Scripts\GameManagement\PoolManager.cs" />
+=======
+>>>>>>> origin/master
     <Compile Include="Assets\Scripts\GameManagement\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\GameManagement\TimerManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\AI\WanderingAI2D.cs" />
