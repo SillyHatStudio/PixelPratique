@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-    /**
-    * List of Enums usable from any script
-    **/
-    public class EnumTypes
+/**
+* List of Enums usable from any script
+**/
+public class EnumTypes
 {
     //Time management
     public enum TimerTypeEnum
@@ -18,9 +18,9 @@ using UnityEngine;
     {
         Unassigned = -1,
         P1 = 0,
-        P2,
-        P3,
-        P4
+        P2 = 1,
+        P3 = 2,
+        P4 = 3
     }
 
     //PlayerControlTypes
@@ -42,6 +42,13 @@ using UnityEngine;
         P4_Down = KeyCode.L,
         P4_Left = KeyCode.K,
         P4_Right = KeyCode.Semicolon
+    }
+
+    //PlayerTypes
+    public static class PlayerType
+    {
+        public static int Pacman = 0;
+        public static int Ghost = 1;
     }
 }
 
