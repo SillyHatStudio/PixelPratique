@@ -1,8 +1,1 @@
-sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/Arena/Debug.unity
-=======
-- path: Assets/Scenes/ControlsPacManTest.unity
->>>>>>> origin/master
-  isLoaded: 1
-  isActive: 1
+sceneSetups: []

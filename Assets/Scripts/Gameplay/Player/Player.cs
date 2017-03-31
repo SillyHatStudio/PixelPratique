@@ -21,8 +21,7 @@ public class Player : Entity
     {
         m_PlayerNumber = EnumTypes.PlayerEnum.Unassigned;
         m_Rigidbody = GetComponent<Rigidbody2D>();
-        SetPlayerNumber(0);
-        inputLocked = false;
+        SetPlayerNumber(0);        
     }
 
     protected override void Start()
