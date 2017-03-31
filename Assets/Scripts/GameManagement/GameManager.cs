@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
     //for animation
     public GameObject[] m_PlayerAnimationList;
 
+    private bool m_PlayerReady = false;
+    public GameObject[] m_PlayerList;
+    
+
 
     ////////////////////////////////////////////////////////////////////////////////
     // Callbacks:
@@ -79,25 +83,19 @@ public class GameManager : MonoBehaviour
                 m_LockPlayersInput = true;
                 break;
 
-            case GameState.MainMenu:
-                if (m_Menu.IsDone())
-                {
-                    switch(m_Menu.GetSelectIndex())
+            case GameState.MainMenu: 
+                    if(Input.GetKeyDown(KeyCode.Return))
                     {
-                        case 0: //if button 0                       
-                            SetCurrentState(GameState.Game);
-                            break;
-                        case 1: //if button 1
-                            Application.Quit();
-                            break;                 
-                    }
-                }
-                else
-                {
-                    CheckForPlayers();
-                }
-
-                m_LockPlayersInput = true;
+                        m_PlayerList = new GameObject[4];
+                        for (int i = 0; i < 4; i++)
+                        {
+                            GameObject player = PoolManager.instance.GetPoolObject("Player");
+                             m_PlayerList[i] = player;
+                            //player.GetComponent<Player>().SetPlayerNumber(i);
+                        }
+                        SetCurrentState(GameState.Game);
+                    } 
+                
                 break;
 
             case GameState.CharSelect:	
@@ -183,6 +181,8 @@ public class GameManager : MonoBehaviour
                 ResetPlayers();             
                 break;
         }
+
+
     }
     private bool JoinButtonWasPressedOnDevice(InputDevice input_device)
     {
