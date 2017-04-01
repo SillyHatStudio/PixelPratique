@@ -14,7 +14,7 @@ public class Player : Entity
     private Rigidbody2D m_Rigidbody;
     private Vector2 m_Direction = Vector2.zero;
     protected int playerType;
-    protected Color playerColor;
+    public Color playerColor;
 
     public TimerManager PlayerTimer;
 
@@ -100,7 +100,7 @@ public class Player : Entity
                 m_ControlKeyDown = KeyCode.L;
                 m_ControlKeyLeft = KeyCode.K;
                 m_ControlKeyRight = KeyCode.Semicolon;
-                playerColor = Color.yellow;
+                playerColor = Color.green;
                 break;
         }
     }

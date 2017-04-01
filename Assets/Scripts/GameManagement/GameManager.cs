@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using InControl;
 using System.Linq;
+using Pixel.Game.Management;
 
 public class GameManager : MonoBehaviour
 {
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour
 
                         if(rand == i)
                         {
+                            player.name = "pacman " + player.GetHashCode();
                             m_CurrentPacman = player;
                             player.GetComponent<PacmanPlayer>().enabled = true;
                             player.GetComponent<PacmanPlayer>().setPlayerType(EnumTypes.PlayerType.Pacman);
@@ -108,13 +110,12 @@ public class GameManager : MonoBehaviour
 
                         else
                         {
+                            player.name = "ghost "+player.GetHashCode();
                             player.GetComponent<GhostPlayer>().enabled = true;
                             player.GetComponent<GhostPlayer>().setPlayerType(EnumTypes.PlayerType.Ghost);
                             player.GetComponent<GhostPlayer>().SetPlayerNumber(i);
+                            player.GetComponent<SpriteRenderer>().color = player.GetComponent<GhostPlayer>().playerColor;
                             m_PlayerList[i].GetComponent<PacmanPlayer>().PlayerTimer.timerLocked = true;
-                            player.GetComponent<SpriteRenderer>().color = Color.white;
-
-
                         }
                         SetPlayerPosition(player, i);
                     }
@@ -156,13 +157,16 @@ public class GameManager : MonoBehaviour
 
     private void ChoosePacman()
     {
+        //Lock the current pac man timer
+        m_CurrentPacman.GetComponent<PacmanPlayer>().PlayerTimer.timerLocked = true;
+
 
         var listPlayers = new List<GameObject>(m_PlayerList); //Tmp list
 
         var candidates = listPlayers.Where(p => p.GetComponent<GhostPlayer>().enabled && !p.GetComponent<PacmanPlayer>().enabled)
             .OrderByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingMins)
-            .ThenBy(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingSecs)
-            .ThenBy(p => p.GetComponent<GhostPlayer>().PlayerTimer.milliseconds).ToList();
+            .ThenByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingSecs)
+            .ThenByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.milliseconds).ToList();
 
         //Group the players by time, and check if there are more than 1 player with a time
         var playersWithSameTime = candidates.GroupBy(p => 
@@ -175,33 +179,42 @@ public class GameManager : MonoBehaviour
 
         if (playersWithSameTime.Count() > 0)
         {
-            Debug.Log("there are 2 players with same time");
-            nextPacman = candidates.ElementAt(1);
+            Debug.Log("there are  players with same time");
+
+            var finalCandidates = playersWithSameTime.SelectMany(g => g);
+            int randIndex = Random.Range(0, finalCandidates.Count());
+            nextPacman = finalCandidates.ElementAt(randIndex);
         }
-            
+
+        //Switch former pacman's scripts
+        m_CurrentPacman.GetComponent<PacmanPlayer>().enabled = false;
+        m_CurrentPacman.GetComponent<GhostPlayer>().enabled = true;
 
 
+        //Set the new pacman
+        nextPacman.name = "pacman "+nextPacman.GetHashCode();
         nextPacman.GetComponent<PacmanPlayer>().enabled = true;
         nextPacman.GetComponent<GhostPlayer>().enabled = false;
-
         nextPacman.GetComponent<PacmanPlayer>().setPlayerType(EnumTypes.PlayerType.Pacman);
         nextPacman.GetComponent<SpriteRenderer>().color = Color.yellow;
         nextPacman.GetComponent<PacmanPlayer>().SetPlayerNumber(listPlayers.IndexOf(nextPacman));
         nextPacman.GetComponent<PacmanPlayer>().PlayerTimer.timerLocked = false;
 
+        //Set the ghosts
         var ghostPlayers = listPlayers.Where(p => !p.GetComponent<PacmanPlayer>().enabled && p.GetComponent<GhostPlayer>().enabled);
 
         foreach(var ghost in ghostPlayers)
         {
+            ghost.name = "ghost "+ghost.GetHashCode();
             ghost.GetComponent<GhostPlayer>().enabled = true;
-            nextPacman.GetComponent<PacmanPlayer>().enabled = false;
+            ghost.GetComponent<PacmanPlayer>().enabled = false;
             ghost.GetComponent<GhostPlayer>().setPlayerType(EnumTypes.PlayerType.Ghost);
-            ghost.GetComponent<SpriteRenderer>().color = Color.white;
             ghost.GetComponent<GhostPlayer>().SetPlayerNumber(listPlayers.IndexOf(ghost));
+            ghost.GetComponent<SpriteRenderer>().color = ghost.GetComponent<GhostPlayer>().playerColor;
             ghost.GetComponent<GhostPlayer>().PlayerTimer.timerLocked = true;
         }
 
-        Debug.Log("NextPacman is player " + nextPacman.GetComponent<PacmanPlayer>().GetPlayerNumber());
+        Debug.Log("NextPacman is player " + nextPacman.GetHashCode());
 
         /* int rand = Random.Range(0, 4);      
 
