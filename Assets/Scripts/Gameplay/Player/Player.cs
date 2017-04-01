@@ -12,6 +12,7 @@ public class Player : Entity
     private EnumTypes.PlayerEnum m_PlayerNumber;
     private KeyCode m_ControlKeyUp, m_ControlKeyDown, m_ControlKeyLeft, m_ControlKeyRight;
     private Rigidbody2D m_Rigidbody;
+    private Vector2 m_Direction = Vector2.zero;
     protected int playerType;
     protected Color playerColor;
 
@@ -20,46 +21,45 @@ public class Player : Entity
     protected virtual void Awake()
     {
         m_PlayerNumber = EnumTypes.PlayerEnum.Unassigned;
-        m_Rigidbody = GetComponent<Rigidbody2D>();
-        SetPlayerNumber(0);        
+        m_Rigidbody = GetComponent<Rigidbody2D>();    
     }
 
     protected override void Start()
     {
         base.Start();
-
     }
 
-    protected virtual void OnCollisionEnter(Collision col) { } //To be inherited by ghosts / pacman
+    protected virtual void OnCollisionEnter2D(Collision2D col) { } //To be inherited by ghosts / pacman
 
     protected virtual void Update()
     {
         if (m_PlayerNumber != EnumTypes.PlayerEnum.Unassigned)
         {
+            m_Direction = Vector2.zero;
             if (Input.GetKey(m_ControlKeyUp))
             {
-                m_Rigidbody.velocity = new Vector2(0, m_BaseSpeed * Speed * Time.deltaTime);
+                m_Direction += new Vector2(0, m_BaseSpeed * Speed * Time.deltaTime);               
+            }
+            if (Input.GetKey(m_ControlKeyDown))
+            {
+                m_Direction += new Vector2(0, -m_BaseSpeed * Speed * Time.deltaTime);
+            }
+            if (Input.GetKey(m_ControlKeyLeft))
+            {
+                m_Direction += new Vector2(-m_BaseSpeed * Speed * Time.deltaTime, 0);
+            }
+            if (Input.GetKey(m_ControlKeyRight))
+            {
+                m_Direction += new Vector2(m_BaseSpeed * Speed * Time.deltaTime, 0);
             }
 
-            else if (Input.GetKey(m_ControlKeyDown))
-            {
-                m_Rigidbody.velocity = new Vector2(0, -m_BaseSpeed * Speed * Time.deltaTime);
-            }
+            m_Rigidbody.velocity = m_Direction;
 
-            else if (Input.GetKey(m_ControlKeyLeft))
+            if (!Input.GetKey(m_ControlKeyUp) && !Input.GetKey(m_ControlKeyDown) && !Input.GetKey(m_ControlKeyLeft) && !Input.GetKey(m_ControlKeyRight))
             {
-                m_Rigidbody.velocity = new Vector2(-m_BaseSpeed * Speed * Time.deltaTime, 0);
+                m_Direction = Vector2.zero;
             }
-
-            else if (Input.GetKey(m_ControlKeyRight))
-            {
-                m_Rigidbody.velocity = new Vector2(m_BaseSpeed * Speed * Time.deltaTime, 0);
-            }
-
-            else
-            {
-                m_Rigidbody.velocity = Vector2.zero;
-            }
+            
         }
     }
 
@@ -104,4 +104,10 @@ public class Player : Entity
                 break;
         }
     }
+
+    public virtual void setPlayerType(int pType)
+    {
+        playerType = pType;
+    }
+
 }

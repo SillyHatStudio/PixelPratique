@@ -14,14 +14,12 @@ public class GhostPlayer : Player {
 
     protected override void Update()
     {
-        base.Update();
+        base.Update();        
     }
 
-    protected override void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.GetComponent<PacmanPlayer>() != null)
-        {
 
-        }
+    public override void setPlayerType(int pType)
+    {
+        this.playerType = EnumTypes.PlayerType.Ghost;
     }
 }

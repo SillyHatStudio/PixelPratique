@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
 
     private bool m_PlayerReady = false;
     public GameObject[] m_PlayerList;
-    
+
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -83,35 +83,118 @@ public class GameManager : MonoBehaviour
                 m_LockPlayersInput = true;
                 break;
 
-            case GameState.MainMenu: 
-                    if(Input.GetKeyDown(KeyCode.Return))
+            case GameState.MainMenu:
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    m_PlayerList = new GameObject[4];
+
+                    int rand = Random.Range(0, 4);
+                    for (int i = 0; i < 4; i++)
                     {
-                        m_PlayerList = new GameObject[4];
-                        for (int i = 0; i < 4; i++)
+                        GameObject player = PoolManager.instance.GetPoolObject("Player");
+                        m_PlayerList[i] = player;                       
+
+                        if(rand == i)
                         {
-                            GameObject player = PoolManager.instance.GetPoolObject("Player");
-                             m_PlayerList[i] = player;
-                            //player.GetComponent<Player>().SetPlayerNumber(i);
+                            player.GetComponent<PacmanPlayer>().enabled = true;
+                            player.GetComponent<PacmanPlayer>().setPlayerType(EnumTypes.PlayerType.Pacman);
+                            player.GetComponent<PacmanPlayer>().SetPlayerNumber(i);
+                            player.GetComponent<SpriteRenderer>().color = Color.yellow;
                         }
-                        SetCurrentState(GameState.Game);
-                    } 
-                
+
+                        else
+                        {
+                            player.GetComponent<GhostPlayer>().enabled = true;
+                            player.GetComponent<GhostPlayer>().setPlayerType(EnumTypes.PlayerType.Ghost);
+                            player.GetComponent<GhostPlayer>().SetPlayerNumber(i);
+                            player.GetComponent<SpriteRenderer>().color = Color.white;
+
+
+                        }
+                        SetPlayerPosition(player, i);
+                    }
+                    SetCurrentState(GameState.Game);
+                }
+
                 break;
 
-            case GameState.CharSelect:	
-				
+            case GameState.CharSelect:
 
-            	break;
+
+                break;
 
             case GameState.Game:
-               
 
-              
+
+
                 break;
 
             default:
                 Debug.LogError("Undefined game state!");
                 SetCurrentState(GameState.SplashScreen);
+                break;
+        }
+    }
+
+    public void ResetGame()
+    {
+        for (int i = 0; i < m_PlayerList.Length; i++)
+        {
+            SetPlayerPosition(m_PlayerList[i], i);
+            m_PlayerList[i].GetComponent<GhostPlayer>().enabled = false;
+            m_PlayerList[i].GetComponent<PacmanPlayer>().enabled = false;
+        }
+        GivePacman();
+    }
+
+    private void GivePacman()
+    {
+        int rand = Random.Range(0, 4);      
+
+        for (int i = 0; i < m_PlayerList.Length; i++)
+        {
+            if (rand == i)
+            {
+                m_PlayerList[i].GetComponent<PacmanPlayer>().enabled = true;
+                m_PlayerList[i].GetComponent<PacmanPlayer>().setPlayerType(EnumTypes.PlayerType.Pacman);
+                m_PlayerList[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                m_PlayerList[i].GetComponent<PacmanPlayer>().SetPlayerNumber(i);
+
+            }
+
+            else
+            {
+                m_PlayerList[i].GetComponent<GhostPlayer>().enabled = true;
+                m_PlayerList[i].GetComponent<GhostPlayer>().setPlayerType(EnumTypes.PlayerType.Ghost);
+                m_PlayerList[i].GetComponent<SpriteRenderer>().color = Color.white;
+                m_PlayerList[i].GetComponent<GhostPlayer>().SetPlayerNumber(i);
+
+
+            }
+        }
+    }
+
+    public void SetPlayerPosition(GameObject player, int pNumber)
+    {
+
+        switch (pNumber)
+        {
+            case 0:
+                player.transform.position = new Vector2(-2.76f, 3.18f);
+                break;
+
+            case 1:
+                player.transform.position = new Vector2(2.76f, 3.18f);
+                break;
+
+            case 2:
+                player.transform.position = new Vector2(-2.76f, -3.18f);
+                break;
+            case 3:
+                player.transform.position = new Vector2(2.76f, -3.18f);
+                break;
+
+            default:
                 break;
         }
     }
@@ -123,7 +206,7 @@ public class GameManager : MonoBehaviour
         {
             Vector3 spos = camera.GetComponent<Camera>().WorldToViewportPoint(wpos);
             RippleEffect fx = camera.GetComponent<RippleEffect>();
-            fx.Emit(spos.x, 1-spos.y);
+            fx.Emit(spos.x, 1 - spos.y);
         }
     }
     public void PerformScreenShake(float duration)
@@ -135,7 +218,7 @@ public class GameManager : MonoBehaviour
             fx.m_ShakeDuration = duration;
         }
     }
-   
+
     void OnStateEnter(GameState state)
     {
         Debug.Log("OnStateEnter " + state);
@@ -149,19 +232,19 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.MainMenu:
-                {                  
+                {
                     GameObject o = (GameObject)Instantiate(m_MenuObject);
                     m_Menu = o.GetComponent<Menu>();
                 }
                 break;
 
             case GameState.Game:
-                {   
+                {
                     SceneManager.LoadScene(1);
                 }
                 break;
         }
-    }   
+    }
     void OnStateLeave(GameState state)
     {
         Debug.Log("OnStateLeave " + state);
@@ -178,7 +261,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Game:
-                ResetPlayers();             
+                ResetPlayers();
                 break;
         }
 
@@ -192,7 +275,7 @@ public class GameManager : MonoBehaviour
             input_device.Action3.WasPressed ||
             input_device.Action4.WasPressed
         );
-    }    
+    }
     private Player FindPlayerUsingDevice(InputDevice input_device)
     {
         for (int i = 0; i < m_players.Count; ++i)
@@ -218,7 +301,7 @@ public class GameManager : MonoBehaviour
 
             // retrieve player component
             Player component = player_object.GetComponent<Player>();
-            component.Device = input_device;          
+            component.Device = input_device;
 
             m_players.Add(component);
 
@@ -226,7 +309,7 @@ public class GameManager : MonoBehaviour
         }
 
         return null;
-    }    
+    }
     void CheckForPlayers()
     {
         // get current active device
@@ -246,11 +329,11 @@ public class GameManager : MonoBehaviour
         CurrentState = GameState.None;
         SetCurrentState(GameState.SplashScreen);
         return true;
-    } 
+    }
     public static GameManager GetInstance()
     {
         return INSTANCE__;
-    }    
+    }
 
     public void SetCurrentState(GameState state)
     {
@@ -282,8 +365,10 @@ public class GameManager : MonoBehaviour
     public int GetNumOfPlayersAlive()
     {
         int count = 0;
-        for (int i = 0; i < GetCurrentPlayerCount(); ++i) {
-            if (GetPlayerAt(i).CurrentState != Entity.State.Dead) {
+        for (int i = 0; i < GetCurrentPlayerCount(); ++i)
+        {
+            if (GetPlayerAt(i).CurrentState != Entity.State.Dead)
+            {
                 count++;
             }
         }
@@ -295,8 +380,9 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < GetCurrentPlayerCount(); ++i)
         {
             Player player = GetPlayerAt(i);
-            if (player.CurrentState != Entity.State.Dead) {
-               
+            if (player.CurrentState != Entity.State.Dead)
+            {
+
             }
         }
     }
@@ -305,14 +391,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_players.Count; ++i)
         {
             Player player = m_players[i];
-            
+
         }
 
         GameObject[] obj = GameObject.FindGameObjectsWithTag("PowerUp");
-        for (int i = 0; i < obj.Length; i++) {
+        for (int i = 0; i < obj.Length; i++)
+        {
             Destroy(obj[i]);
         }
-    } 
-    
+    }
+
 
 }

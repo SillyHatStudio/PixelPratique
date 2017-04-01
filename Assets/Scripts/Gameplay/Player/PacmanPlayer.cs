@@ -22,11 +22,16 @@ public class PacmanPlayer : Player {
     }
 
 
-    protected override void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.GetComponent<GhostPlayer>() != null)
+    protected override void OnCollisionEnter2D(Collision2D col)
+    {       
+        if (col.gameObject.GetComponent<GhostPlayer>() && col.gameObject.GetComponent<GhostPlayer>().enabled == true && gameObject.GetComponent<PacmanPlayer>().enabled == true)
         {
-            isDead = true;
+            GameManager.GetInstance().ResetGame();
         }
+    }
+
+    public override void setPlayerType(int pType)
+    {
+        this.playerType = EnumTypes.PlayerType.Ghost;
     }
 }
