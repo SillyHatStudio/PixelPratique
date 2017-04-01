@@ -105,6 +105,11 @@ public class Player : Entity
         }
     }
 
+    public int GetPlayerNumber()
+    {
+        return (int)m_PlayerNumber;
+    }
+
     public virtual void setPlayerType(int pType)
     {
         playerType = pType;

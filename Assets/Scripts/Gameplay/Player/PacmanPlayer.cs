@@ -26,6 +26,7 @@ public class PacmanPlayer : Player {
     {       
         if (col.gameObject.GetComponent<GhostPlayer>() && col.gameObject.GetComponent<GhostPlayer>().enabled == true && gameObject.GetComponent<PacmanPlayer>().enabled == true)
         {
+            PlayerTimer.timerLocked = true;
             GameManager.GetInstance().ResetGame();
         }
     }

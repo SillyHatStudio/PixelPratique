@@ -25,7 +25,7 @@ namespace Pixel.Game.Management
         public int countDownMinutes;
         [Range(0, 59)]
         public int countDownSeconds;
-        private float remainingMins, remainingSecs, milliseconds;
+        public float remainingMins, remainingSecs, milliseconds;
         private bool timerOver;
 
         private void Awake()
@@ -112,8 +112,6 @@ namespace Pixel.Game.Management
                                 else
                                     timerTextObject.text = string.Format("{0}:{1}", remainingMins, remainingSecs);
                             }
-
-                            Debug.Log("rem tine " + remainingMins + ":" + remainingSecs);
                         }
                     }
                 }
