@@ -190,6 +190,8 @@ public class GameManager : MonoBehaviour
         m_CurrentPacman.GetComponent<PacmanPlayer>().enabled = false;
         m_CurrentPacman.GetComponent<GhostPlayer>().enabled = true;
 
+        m_CurrentPacman = nextPacman;
+
 
         //Set the new pacman
         nextPacman.name = "pacman "+nextPacman.GetHashCode();
