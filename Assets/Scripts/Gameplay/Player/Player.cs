@@ -16,6 +16,9 @@ public class Player : Entity
     protected int playerType;
     public Color playerColor;
 
+    //[HideInInspector]
+    public int playerScore;
+
     public TimerManager PlayerTimer;
 
     protected virtual void Awake()

@@ -257,10 +257,10 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 2:
-                player.transform.position = new Vector2(-2.76f, -3.18f);
+                player.transform.position = new Vector2(-2.76f, -3.5f);
                 break;
             case 3:
-                player.transform.position = new Vector2(2.76f, -3.18f);
+                player.transform.position = new Vector2(2.76f, -3.5f);
                 break;
 
             default:
