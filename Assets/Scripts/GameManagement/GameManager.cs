@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     public GameObject m_CrystalBase;
     bool m_LockPlayersInput = true;
     private GameObject m_CurrentPacman;
+    private int m_NumberOfCrystalsToEarn;
+    private bool m_CrystalsSet = false;
+    private List<GameObject> m_Crystals;
+    private bool m_GameOver = false;
 
     public int m_NumberOfRound = 4;
 
@@ -132,8 +136,20 @@ public class GameManager : MonoBehaviour
 
             case GameState.Game:
 
+                //Init crystal base 
+                if(m_CrystalBase == null && !m_CrystalsSet)
+                {
+                    m_CrystalBase = GameObject.Find("CrystalBase");
+                    InitCrystalList();
+                    m_CrystalsSet = true;
+                }
 
-                m_CrystalBase = GameObject.Find("CrystalBase");
+                //Check victory conditions
+                //=> Current pacman took all the crystals
+                if (AllCrystalsTakenByCurrentPacman())
+                {
+                    Debug.Log("Victoryyyyyyyyyyyyyyyyy");
+                }
 
                 break;
 
@@ -146,16 +162,28 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        //First, check if there are 3 players with a timer == 0 when current pac man dies, and choose the winner
+        var listPlayers = new List<GameObject>(m_PlayerList);
 
-        for (int i = 0; i < m_PlayerList.Length; i++)
+        var playersWithTimerOver = listPlayers.Where(p => p.GetComponent<TimerManager>().remainingMins == 0
+        && p.GetComponent<TimerManager>().remainingSecs == 0);
+        if (playersWithTimerOver.Count() == 3)
         {
-            SetPlayerPosition(m_PlayerList[i], i);
-           // m_PlayerList[i].GetComponent<GhostPlayer>().enabled = false;
-            //m_PlayerList[i].GetComponent<PacmanPlayer>().enabled = false;
-
+            var winner = playersWithTimerOver.OrderByDescending(p => p.GetComponent<PacmanPlayer>().playerScore).First();
+            Debug.Log("Victory for "+winner.name);
+            m_GameOver = true;
         }
-        ChoosePacman();
-        SetUnsetAllCrystals(true);
+
+        if(!m_GameOver)
+        {
+            for (int i = 0; i < m_PlayerList.Length; i++)
+            {
+                SetPlayerPosition(m_PlayerList[i], i);
+            }
+            ChoosePacman();
+            InitCrystalList();
+            SetUnsetAllCrystals(true);
+        }
     }
 
     private void ChoosePacman()
@@ -170,6 +198,10 @@ public class GameManager : MonoBehaviour
             .OrderByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingMins)
             .ThenByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingSecs)
             .ThenByDescending(p => p.GetComponent<GhostPlayer>().PlayerTimer.milliseconds).ToList();
+
+        var playersWithTimerDone = candidates.Where(p => p.GetComponent<GhostPlayer>().PlayerTimer.remainingMins > 0f && p.GetComponent<GhostPlayer>().PlayerTimer.remainingSecs > 0f);
+
+        candidates = candidates.Except(playersWithTimerDone).ToList();
 
         //Group the players by time, and check if there are more than 1 player with a time
         var playersWithSameTime = candidates.GroupBy(p => 
@@ -221,16 +253,33 @@ public class GameManager : MonoBehaviour
         Debug.Log("NextPacman is player " + nextPacman.GetHashCode());
     }
 
+    public bool AllCrystalsTakenByCurrentPacman()
+    {
+        return m_Crystals.All(c => c.GetComponent<Crystal>().taken);
+    }
+
+    private void InitCrystalList()
+    {
+        m_Crystals = new List<GameObject>();
+        foreach (Transform crystal in m_CrystalBase.transform)
+        {
+            m_Crystals.Add(crystal.gameObject);
+        }
+    }
+
     //Enable / disable all crystals
     public void SetUnsetAllCrystals(bool enable)
     {
         if (m_CrystalBase)
         {
+            m_NumberOfCrystalsToEarn = 0;
+
             foreach (Transform crystal in m_CrystalBase.transform)
             {
                 if (crystal.gameObject.GetComponent<Crystal>())
                 {
                     crystal.gameObject.GetComponent<Crystal>().EnableCrystal(enable);
+                    m_NumberOfCrystalsToEarn++;
                 }
             }
         }

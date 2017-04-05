@@ -9,6 +9,8 @@ public class Crystal : MonoBehaviour {
     private SpriteRenderer m_SpriteRenderer;
     private PolygonCollider2D m_Collider;
 
+    public bool taken;
+
     public void Awake()
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
@@ -19,6 +21,7 @@ public class Crystal : MonoBehaviour {
     {
         m_SpriteRenderer.enabled = enable;
         m_Collider.enabled = enable;
+        taken = !enable;
     }
 
 }
