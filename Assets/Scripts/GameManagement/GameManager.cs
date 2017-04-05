@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private const int MAX_PLAYERS__ = 4;
     private List<Player> m_players = new List<Player>(MAX_PLAYERS__);
     public GameObject m_PlayerPrefab;
+    public GameObject m_CrystalBase;
     bool m_LockPlayersInput = true;
     private GameObject m_CurrentPacman;
 
@@ -132,6 +133,7 @@ public class GameManager : MonoBehaviour
             case GameState.Game:
 
 
+                m_CrystalBase = GameObject.Find("CrystalBase");
 
                 break;
 
@@ -153,6 +155,7 @@ public class GameManager : MonoBehaviour
 
         }
         ChoosePacman();
+        SetUnsetAllCrystals(true);
     }
 
     private void ChoosePacman()
@@ -192,7 +195,6 @@ public class GameManager : MonoBehaviour
 
         m_CurrentPacman = nextPacman;
 
-
         //Set the new pacman
         nextPacman.name = "pacman "+nextPacman.GetHashCode();
         nextPacman.GetComponent<PacmanPlayer>().enabled = true;
@@ -217,30 +219,21 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("NextPacman is player " + nextPacman.GetHashCode());
+    }
 
-        /* int rand = Random.Range(0, 4);      
-
-         for (int i = 0; i < m_PlayerList.Length; i++)
-         {
-             if (rand == i)
-             {
-                 m_PlayerList[i].GetComponent<PacmanPlayer>().enabled = true;
-                 m_PlayerList[i].GetComponent<PacmanPlayer>().setPlayerType(EnumTypes.PlayerType.Pacman);
-                 m_PlayerList[i].GetComponent<SpriteRenderer>().color = Color.yellow;
-                 m_PlayerList[i].GetComponent<PacmanPlayer>().SetPlayerNumber(i);
-                 m_PlayerList[i].GetComponent<PacmanPlayer>().PlayerTimer.timerLocked = false;
-
-             }
-
-             else
-             {
-                 m_PlayerList[i].GetComponent<GhostPlayer>().enabled = true;
-                 m_PlayerList[i].GetComponent<GhostPlayer>().setPlayerType(EnumTypes.PlayerType.Ghost);
-                 m_PlayerList[i].GetComponent<SpriteRenderer>().color = Color.white;
-                 m_PlayerList[i].GetComponent<GhostPlayer>().SetPlayerNumber(i);
-                 m_PlayerList[i].GetComponent<PacmanPlayer>().PlayerTimer.timerLocked = true;
-             }
-         }*/
+    //Enable / disable all crystals
+    public void SetUnsetAllCrystals(bool enable)
+    {
+        if (m_CrystalBase)
+        {
+            foreach (Transform crystal in m_CrystalBase.transform)
+            {
+                if (crystal.gameObject.GetComponent<Crystal>())
+                {
+                    crystal.gameObject.GetComponent<Crystal>().EnableCrystal(enable);
+                }
+            }
+        }
     }
 
     public void SetPlayerPosition(GameObject player, int pNumber)
